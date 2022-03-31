@@ -11,9 +11,7 @@ from sqlalchemy import create_engine
 from pydantic import BaseModel
 
 
-stage = os.environ.get('STAGE', None)
-openapi_prefix = f"/{stage}" if stage else "/"
-app = FastAPI(title="BasketballDatabase", openapi_prefix=openapi_prefix)
+app = FastAPI()
 
 engine = create_engine("mysql+pymysql://admin:SageJutsu69@basketball-search.cq86yhnzjvtt.us-east-1.rds.amazonaws.com/sys", echo=True, future=True)
 
