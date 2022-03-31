@@ -196,8 +196,8 @@ def RandomSearch(num: int):
             times = times + 1
 
         print("querying complete")
-        finalSearchString = searchString.removeprefix("select * from per_game_seasons where ")
-        return response, finalSearchString
+        # finalSearchString = searchString.removeprefix("select * from per_game_seasons where ")
+        return response, searchString
 
     
 def GetPlayerPage(playerName: str):
