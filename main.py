@@ -82,8 +82,8 @@ async def random_search(count: int):
     try:
         response = RandomSearch(count)
         return response
-    except:
-        return "Error", "There was an Error, please try again"
+    except Exception as ex:
+        return ex
 
 @app.get("/Player")
 async def get_player_page(playerName: str):
@@ -109,8 +109,8 @@ async def quiz_question():
         amount = len(randomSearch[0]), len(nameArray)
         hint = randomSearch[0][0][1], randomSearch[0][0][5], randomSearch[0][0][3]
         return randomSearch[1], nameArray, amount, hint
-    except:
-        return "Error", "There was an Error, please try again"
+    except Exception as ex:
+        return ex
 
 @app.get("/Leaderboard/Top")
 async def current_leader():
@@ -166,13 +166,13 @@ def CustomSearch(item: Item):
     return searchString + " ORDER BY Year Desc"
 
 def RandomSearch(num: int):
-    tIntsubItems = list(IntSubItems)
-    tIntsubItems.remove("Year")
-    count = num + 1
-    searchString = "select * from per_game_seasons where "
-    times = 0
-    operator = ">"
     with engine.connect() as conn:
+        tIntsubItems = list(IntSubItems)
+        tIntsubItems.remove("Year")
+        count = num + 1
+        searchString = "select * from per_game_seasons where "
+        times = 0
+        operator = ">"
         while count > num or count == 0 :
             if count == 0 or times >= len(IntSubItems):
                 searchString = "select * from per_game_seasons where "
