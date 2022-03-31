@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from sqlalchemy.sql.expression import and_
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
@@ -81,10 +81,9 @@ async def ccustom_search(item: Item):
 async def random_search(count: int):
     try:
         response = RandomSearch(count)
-        print("RandomSearchComplete")
         return response
-    except Exception as ex:
-        return ex
+    except:
+        return "Error", "There was an Error, please try again"
 
 @app.get("/Player")
 async def get_player_page(playerName: str):
@@ -98,7 +97,7 @@ async def get_player_page(playerName: str):
 async def quiz_question():
     try:
         randomSearch = RandomSearch(6)
-        print("RandomSearchComplete")
+        print("Method finished")
         nameArray = []
         for season in randomSearch[0]:
             if "*" in season[2]:
@@ -111,8 +110,8 @@ async def quiz_question():
         amount = len(randomSearch[0]), len(nameArray)
         hint = randomSearch[0][0][1], randomSearch[0][0][5], randomSearch[0][0][3]
         return randomSearch[1], nameArray, amount, hint
-    except Exception as ex:
-        return ex
+    except:
+        return "Error", "There was an Error, please try again"
 
 @app.get("/Leaderboard/Top")
 async def current_leader():
@@ -168,13 +167,13 @@ def CustomSearch(item: Item):
     return searchString + " ORDER BY Year Desc"
 
 def RandomSearch(num: int):
+    tIntsubItems = list(IntSubItems)
+    tIntsubItems.remove("Year")
+    count = num + 1
+    searchString = "select * from per_game_seasons where "
+    times = 0
+    operator = ">"
     with engine.connect() as conn:
-        tIntsubItems = list(IntSubItems)
-        tIntsubItems.remove("Year")
-        count = num + 1
-        searchString = "select * from per_game_seasons where "
-        times = 0
-        operator = ">"
         while count > num or count == 0 :
             if count == 0 or times >= len(IntSubItems):
                 searchString = "select * from per_game_seasons where "
@@ -195,9 +194,8 @@ def RandomSearch(num: int):
             response = result.all()
             count = len(response)
             times = times + 1
-            print("times " + times)
 
-        print('Querying complete')
+        print("querying complete")
         finalSearchString = searchString.removeprefix("select * from per_game_seasons where ")
         return response, finalSearchString
 
